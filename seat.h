@@ -1,4 +1,5 @@
 #include <inttypes.h>
+#include <string.h>
 
 class seat {
 
@@ -33,16 +34,16 @@ public:
 
    void setInGame(bool b) { inGame = b; };
 
-   void setName(const char *_name) { name = _name; };
+   void setName(char *_name);
 
-   const char* getName() { return name; };
+   char* getName() { return name; };
 
    bool cardsOnTable() { return revealed; }
 
    ~seat();
 
 private:
-   const char *name;
+   char name[32];
 
    bool revealed;
 

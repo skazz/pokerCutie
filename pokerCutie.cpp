@@ -1,4 +1,5 @@
 #include "pokerCutie.h"
+#include <iostream>
 
 
 pokerCutie::pokerCutie() {

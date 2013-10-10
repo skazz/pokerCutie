@@ -1,4 +1,5 @@
 #include "client.h"
+#include <iostream>
 
 using namespace std;
 
@@ -114,7 +115,7 @@ int client::read(unsigned char *buf) {
    unsigned char *p = buf;
    int8_t a, b, c;
    int16_t d, f;
-   unsigned char s[64];
+   char s[64];
    int8_t action = *p++;
 
    switch(action) {
@@ -330,8 +331,8 @@ void client::setRiver(int c1)
    emit updateTable();
 }
 
-void client::setPlayerName(int n, unsigned char *name) {
-   player[n].setName(reinterpret_cast<const char *>(name));
+void client::setPlayerName(int n, char *name) {
+   player[n].setName(name);
 }
 
 void client::playerHolecards(int n, int c1, int c2) {

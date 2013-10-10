@@ -121,7 +121,7 @@ private:
 
    void playerIsBigBlind(int n);
 
-   void setPlayerName(int n, unsigned char *name);
+   void setPlayerName(int n, char *name);
 
    void setPlayerCount(int n);
 

@@ -4,6 +4,11 @@ seat::seat() {
    inGame = true;
 }
 
+void seat::setName(char* _name)
+{
+   memcpy(name, _name, sizeof(_name));
+}
+
 void seat::setHolecards(int c1, int c2) {
    holecard[0] = c1;
    holecard[1] = c2;
@@ -15,7 +20,7 @@ void seat::bets(int n) {
    currentBet += n;
 }
 
-void seat:: wins(int n) {
+void seat::wins(int n) {
    remainingChips += n;
 }
 
