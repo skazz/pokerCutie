@@ -1,0 +1,4 @@
+qt interface for client to poker-server
+requires qt4
+
+to build run "qmake-qt4 -project && qmake-qt4 -makefile && make"

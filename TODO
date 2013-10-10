@@ -1,0 +1,8 @@
+write raise(int)
+
+paint playerseats
+   remove eliminated players
+   different layouts?
+
+popups for player action
+   connect signal to label/pixmap  with timer?
