@@ -1,5 +1,4 @@
 #include "pokerCutie.h"
-#include <iostream>
 
 
 pokerCutie::pokerCutie() {
@@ -7,42 +6,58 @@ pokerCutie::pokerCutie() {
    setStyleSheet("background-image: url(./table.png)");
    setGeometry(QRect(20, 20, 800, 600));
 
+   tableFont = QFont(QString("Tahoma"), 12);
+   tableFont.setBold(true);
+   this->setFont(tableFont);
+
+
    tableReady = false;
 
-   loc[0].x = 131;
+   loc[0].x = 345;
    loc[0].y = 480;
-   loc[0].name = 585;
+   loc[0].name = 580;
    loc[0].chips = 465;
 
-   loc[1].x = 20;
-   loc[1].y = 253;
-   loc[1].name = 358;
-   loc[1].chips = 238;
+   loc[1].x = 131;
+   loc[1].y = 480;
+   loc[1].name = 580;
+   loc[1].chips = 465;
 
-   loc[2].x = 131;
-   loc[2].y = 30;
-   loc[2].name = 15;
-   loc[2].chips = 135;
+   loc[2].x = 20;
+   loc[2].y = 253;
+   loc[2].name = 353;
+   loc[2].chips = 238;
 
-   loc[3].x = 354;
+   loc[3].x = 131;
    loc[3].y = 30;
    loc[3].name = 15;
    loc[3].chips = 135;
 
-   loc[4].x = 551;
+   loc[4].x = 354;
    loc[4].y = 30;
    loc[4].name = 15;
    loc[4].chips = 135;
 
-   loc[5].x = 682;
-   loc[5].y = 253;
-   loc[5].name = 358;
-   loc[5].chips = 238;
+   loc[5].x = 551;
+   loc[5].y = 30;
+   loc[5].name = 15;
+   loc[5].chips = 135;
 
-   loc[6].x = 551;
-   loc[6].y = 480;
-   loc[6].name = 585;
-   loc[6].chips = 465;
+   loc[6].x = 682;
+   loc[6].y = 253;
+   loc[6].name = 353;
+   loc[6].chips = 238;
+
+   loc[7].x = 551;
+   loc[7].y = 480;
+   loc[7].name = 580;
+   loc[7].chips = 465;
+
+   for(int i = 0; i < 8; i++) {
+      time(&(notification[i].start));
+      notification[i].text = "";
+      notification[i].duration = 2;
+   }
 
    loadCards("./cards.png");
    back = new QPixmap("./back.png");
@@ -89,6 +104,8 @@ pokerCutie::pokerCutie() {
    connect(me, SIGNAL(playerRaised(int, int)), this, SLOT(onRaise(int, int)));
    connect(me, SIGNAL(playerAllin(int, int)), this, SLOT(onAllin(int)));
 
+   connect(me, SIGNAL(playerWon(int, int)), this, SLOT(onPlayerWon(int)));
+
 
    me->moveToThread(&workerThread);
    workerThread.start();
@@ -96,23 +113,52 @@ pokerCutie::pokerCutie() {
    show();
 }
 
+void pokerCutie::onPlayerWon(int n) {
+   int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
+   time(&(notification[seat].start));
+   notification[seat].text = "Winner";
+
+   repaint();
+}
+
+
 void pokerCutie::onFold(int n) {
+   int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
+   time(&(notification[seat].start));
+   notification[seat].text = "I Fold";
+
    repaint();
 }
 
 void pokerCutie::onCheck(int n) {
+   int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
+   time(&(notification[seat].start));
+   notification[seat].text = "I Check";
+
    repaint();
 }
 
 void pokerCutie::onCall(int n) {
+   int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
+   time(&(notification[seat].start));
+   notification[seat].text = "I Call";
+
    repaint();
 }
 
 void pokerCutie::onRaise(int n, int a) {
+   int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
+   time(&(notification[seat].start));
+   notification[seat].text = "I Raise";
+
    repaint();
 }
 
 void pokerCutie::onAllin(int n) {
+   int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
+   time(&(notification[seat].start));
+   notification[seat].text = "I'm Allin";
+
    repaint();
 }
 
@@ -124,6 +170,7 @@ void pokerCutie::slotNextRound()
 void pokerCutie::onReadyButton()
 {
    readyButton->setVisible(false);
+   // clear notifications TODO
    emit signalReady();
 }
 
@@ -147,19 +194,19 @@ void pokerCutie::paintEvent(QPaintEvent * event)
       if(mySeat->isInGame()) {
          if(!mySeat->hasFolded()) {
             tmp = mySeat->getHolecards();
-            painter.drawPixmap(354, 480, *cards, (tmp[0] / 4)*73+1, (tmp[0] % 4)*98+2, 72, 95);
-            painter.drawPixmap(374, 480, *cards, (tmp[1] / 4)*73+1, (tmp[1] % 4)*98+2, 72, 95);
+            painter.drawPixmap(loc[0].x, loc[0].y, *cards, (tmp[0] / 4)*73+1, (tmp[0] % 4)*98+2, 72, 95);
+            painter.drawPixmap(loc[0].x+20, loc[0].y, *cards, (tmp[1] / 4)*73+1, (tmp[1] % 4)*98+2, 72, 95);
          } else {
-            painter.drawPixmap(345, 480, *back);
-            painter.drawPixmap(374, 480, *back);
+            painter.drawPixmap(loc[0].x, loc[0].y, *back);
+            painter.drawPixmap(loc[0].x+20, loc[0].y, *back);
          }
 
          name = mySeat->getName();
          bet.setNum(mySeat->getCurrentBet());
          chips.setNum(mySeat->getRemainingChips());
-         painter.drawText(354, 585, 92, 10, Qt::AlignCenter, name);
-         painter.drawText(345, 465, 46, 10, Qt::AlignCenter, bet);
-         painter.drawText(395, 465, 46, 10, Qt::AlignCenter, chips);
+         painter.drawText(loc[0].x, loc[0].name, 92, 10, Qt::AlignCenter, name);
+         painter.drawText(loc[0].x, loc[0].chips, 46, 10, Qt::AlignCenter, bet);
+         painter.drawText(loc[0].x+46, loc[0].chips, 46, 10, Qt::AlignCenter, chips);
       }
 
       if(me->onFlop()) {
@@ -183,7 +230,7 @@ void pokerCutie::paintEvent(QPaintEvent * event)
 
       // paint other players
       int seat = (me->getSeatNumber() + 1) % playerCount;
-      for(int i = 0; i < playerCount - 1; i++) {
+      for(int i = 1; i < playerCount; i++) {
          if(player[seat].isInGame()) {
             if(!player[seat].hasFolded()) {
                if(!player[seat].cardsOnTable()) {
@@ -206,6 +253,18 @@ void pokerCutie::paintEvent(QPaintEvent * event)
 
          }
          seat = (seat+1) % playerCount;
+      }
+
+      // paint notifications
+      time_t now;
+      time(&now);
+      int elapsed;
+      for(int i = 0; i < playerCount; i++) {
+         elapsed = difftime(now, notification[i].start);
+         if(elapsed < notification[i].duration) {
+            painter.fillRect(QRect(loc[i].x+5, loc[i].y+25, 82, 40), QColor(150, 150, 150, 220));
+            painter.drawText(loc[i].x+5, loc[i].y+25, 82, 40, Qt::AlignCenter, notification[i].text);
+         }
       }
 
       painter.end();

@@ -2,6 +2,7 @@
 //#include "seat.h"
 #include <QThread>
 #include <QtGui>
+#include <time.h>
 
 class pokerCutie : QMainWindow {
    Q_OBJECT
@@ -29,6 +30,8 @@ public slots:
    void onCheck(int n);
    void onCall(int n);
    void onAllin(int n);
+
+   void onPlayerWon(int n);
 
    void onUpdateTable();
 
@@ -61,12 +64,20 @@ private:
    QPixmap *back;
    QPainter painter;
 
+   QFont tableFont;
+
    struct {
       int x;
       int y;
       int name;
       int chips;
-   } loc[7];
+   } loc[8];
+
+   struct {
+      char *text;
+      time_t start;
+      int duration;
+   } notification[8];
 
    client *me;
    seat *mySeat;
