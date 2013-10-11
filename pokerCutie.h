@@ -80,7 +80,6 @@ private:
    } notification[8];
 
    client *me;
-   seat *mySeat;
    seat *player;
    int playerCount;
 

@@ -195,29 +195,10 @@ void pokerCutie::paintEvent(QPaintEvent * event)
       int *tmp;
       int tmp2;
       QString name, bet, chips;
-      mySeat = me->getMe();
       playerCount = me->getPlayercount();
       player = me->getPlayers();
 
       painter.begin(this);
-      if(mySeat->isInGame()) {
-         if(!mySeat->hasFolded()) {
-            tmp = mySeat->getHolecards();
-            painter.drawPixmap(loc[0].x, loc[0].y, *cards, (tmp[0] / 4)*73+1, (tmp[0] % 4)*98+2, 72, 95);
-            painter.drawPixmap(loc[0].x+20, loc[0].y, *cards, (tmp[1] / 4)*73+1, (tmp[1] % 4)*98+2, 72, 95);
-         } else {
-            painter.drawPixmap(loc[0].x, loc[0].y, *back);
-            painter.drawPixmap(loc[0].x+20, loc[0].y, *back);
-         }
-
-         name = mySeat->getName();
-         bet.setNum(mySeat->getCurrentBet());
-         chips.setNum(mySeat->getRemainingChips());
-         painter.drawText(loc[0].x, loc[0].name, 92, 10, Qt::AlignCenter, name);
-         painter.drawText(loc[0].x, loc[0].chips, 46, 10, Qt::AlignCenter, bet);
-         painter.drawText(loc[0].x+46, loc[0].chips, 46, 10, Qt::AlignCenter, chips);
-      }
-
       if(me->onFlop()) {
          tmp = me->getFlop();
          painter.drawPixmap(200, 253, *cards, (tmp[0] / 4)*73+1, (tmp[0] % 4)*98+2, 72, 95);
@@ -237,9 +218,9 @@ void pokerCutie::paintEvent(QPaintEvent * event)
          painter.drawPixmap(528, 253, *cards, (tmp2 / 4)*73+1, (tmp2 % 4)*98+2, 72, 95);
       }
 
-      // paint other players
-      int seat = (me->getSeatNumber() + 1) % playerCount;
-      for(int i = 1; i < playerCount; i++) {
+      // paint players
+      int seat = me->getSeatNumber();
+      for(int i = 0; i < playerCount; i++) {
          if(player[seat].isInGame()) {
             if(!player[seat].hasFolded()) {
                if(!player[seat].cardsOnTable()) {
@@ -297,7 +278,7 @@ void pokerCutie::onCallButton() {
 void pokerCutie::onRaiseButton() {
    bool ok = false;
 
-   int value = QInputDialog::getInt ( this, QString("Raise"), QString("Raise by:"), me->getMinimumBet(), me->getMinimumBet(), mySeat->getRemainingChips(), 10, &ok);
+   int value = QInputDialog::getInt ( this, QString("Raise"), QString("Raise by:"), me->getMinimumBet(), me->getMinimumBet(), me->getMe()->getRemainingChips(), 10, &ok);
    
    if(ok) {
       setButtonsDisabled(true);
