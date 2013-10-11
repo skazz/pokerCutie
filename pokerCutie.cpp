@@ -116,6 +116,7 @@ pokerCutie::pokerCutie() {
 void pokerCutie::onPlayerWon(int n) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
+   notification[seat].duration = 2;
    notification[seat].text = "Winner";
 
    repaint();
@@ -126,6 +127,7 @@ void pokerCutie::onFold(int n) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
    notification[seat].text = "I Fold";
+   notification[seat].duration = 2;
 
    repaint();
 }
@@ -134,6 +136,7 @@ void pokerCutie::onCheck(int n) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
    notification[seat].text = "I Check";
+   notification[seat].duration = 2;
 
    repaint();
 }
@@ -142,6 +145,7 @@ void pokerCutie::onCall(int n) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
    notification[seat].text = "I Call";
+   notification[seat].duration = 2;
 
    repaint();
 }
@@ -150,6 +154,7 @@ void pokerCutie::onRaise(int n, int a) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
    notification[seat].text = "I Raise";
+   notification[seat].duration = 2;
 
    repaint();
 }
@@ -158,6 +163,7 @@ void pokerCutie::onAllin(int n) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
    notification[seat].text = "I'm Allin";
+   notification[seat].duration = 2;
 
    repaint();
 }
@@ -171,6 +177,9 @@ void pokerCutie::onReadyButton()
 {
    readyButton->setVisible(false);
    // clear notifications TODO
+   for(int i = 0; i < 8; i++) {
+      notification[i].duration = 0;
+   }
    emit signalReady();
 }
 
