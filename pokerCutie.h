@@ -25,7 +25,7 @@ public slots:
 
    void onConnect();
 
-   void onRaise(int n, int a);
+   void onRaise(int n);
    void onFold(int n);
    void onCheck(int n);
    void onCall(int n);
@@ -74,7 +74,7 @@ private:
    } loc[8];
 
    struct {
-      char *text;
+      const char *text;
       time_t start;
       int duration;
    } notification[8];

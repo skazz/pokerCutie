@@ -101,7 +101,7 @@ pokerCutie::pokerCutie() {
    connect(me, SIGNAL(playerFolded(int)), this, SLOT(onFold(int)));
    connect(me, SIGNAL(playerCalled(int)), this, SLOT(onCall(int)));
    connect(me, SIGNAL(playerChecked(int)), this, SLOT(onCheck(int)));
-   connect(me, SIGNAL(playerRaised(int, int)), this, SLOT(onRaise(int, int)));
+   connect(me, SIGNAL(playerRaised(int, int)), this, SLOT(onRaise(int)));
    connect(me, SIGNAL(playerAllin(int, int)), this, SLOT(onAllin(int)));
 
    connect(me, SIGNAL(playerWon(int, int)), this, SLOT(onPlayerWon(int)));
@@ -150,7 +150,7 @@ void pokerCutie::onCall(int n) {
    repaint();
 }
 
-void pokerCutie::onRaise(int n, int a) {
+void pokerCutie::onRaise(int n) {
    int seat = (n - me->getSeatNumber() + playerCount) % playerCount;
    time(&(notification[seat].start));
    notification[seat].text = "I Raise";
@@ -176,7 +176,7 @@ void pokerCutie::slotNextRound()
 void pokerCutie::onReadyButton()
 {
    readyButton->setVisible(false);
-   // clear notifications TODO
+   // clear notifications
    for(int i = 0; i < 8; i++) {
       notification[i].duration = 0;
    }
